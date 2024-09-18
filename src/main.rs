@@ -1,4 +1,4 @@
-use eframe::egui;
+﻿use eframe::egui;
 use egui::Vec2;
 use egui_plot::{HPlacement::Left, Line, Plot, PlotPoints};
 use std::time::{Duration, Instant};
@@ -76,14 +76,13 @@ impl eframe::App for DashApp {
                        
                         ui.add_space(25.0);
 
-                        let progress_bar = egui::ProgressBar::new(progress)
-                            .show_percentage()
-                            .text(format!("{:.1}%", progress * 100.0));
+                        let progress_bar = egui::ProgressBar::new(progress);
                         ui.add(progress_bar);
 
                         ui.label(format!("Time remaining: {:02}:{:02}", minutes, seconds));
 
                         ui. horizontal(|ui| {
+
                             let start = ui.button("Start");
                             let stop = ui.button("Stop");
                             let reset = ui.button("Reset");
@@ -104,9 +103,7 @@ impl eframe::App for DashApp {
                                 comp_timer.start_time = None;
                                 comp_timer.is_running = false;
                             }
-                        });
-
-                       
+                        });                     
                     });
 
                     ctx.request_repaint();
@@ -119,7 +116,7 @@ impl eframe::App for DashApp {
                     });
                 });
             });
-            ui.horizontal_wrapped(|ui| {
+            ui.horizontal(|ui| {
                 ui.group(|ui| {
                     ui.set_width(ui.available_width() / 4.0);
                     ui.set_height(300.0);
@@ -219,6 +216,7 @@ impl eframe::App for ArmApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.label("This is the arm panel");
+
         });
     }
 }
@@ -229,7 +227,74 @@ struct CamApp {}
 impl eframe::App for CamApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.label("This is the cameras panel");
+            ui.vertical(|ui| {
+                ui.horizontal(|ui| {
+                    ui.group(|ui| {
+                        ui.set_width(ui.available_width() / 2.0);
+                        ui.set_height(300.0);
+                        ui.vertical(|ui| {
+                            ui.label("Camera One");
+                            ui.label("[add camera stream]");
+                            ui.horizontal(|ui| {
+                                ui.button("HD");
+                                ui.button("◑");
+                                ui.button("🔍");
+                                ui.button("⏸");
+                                ui.button("🔀");
+                            });
+                        });
+                    });
+                    ui.group(|ui| {
+                        ui.set_width(ui.available_width());
+                        ui.set_height(300.0);
+                        ui.vertical(|ui| {
+                            ui.label("Camera Two");
+                            ui.label("[add camera stream]");
+                            ui.horizontal(|ui| {
+                                ui.button("HD");
+                                ui.button("◑");
+                                ui.button("🔍");
+                                ui.button("⏸");
+                                ui.button("🔀");
+                            });
+
+                        });
+                    });
+                });
+                ui.horizontal(|ui| {
+                    ui.group(|ui| {
+                        ui.set_width(ui.available_width() / 2.0);
+                        ui.set_height(300.0);
+                        ui.vertical(|ui| {
+                            ui.label("Camera Three");
+                            ui.label("[add camera stream]");
+                            ui.horizontal(|ui| {
+                                ui.button("HD");
+                                ui.button("◑");
+                                ui.button("🔍");
+                                ui.button("⏸");
+                                ui.button("🔀");
+                            });
+                        });
+                    });
+                    ui.group(|ui| {
+                        ui.set_width(ui.available_width());
+                        ui.set_height(300.0);
+                        ui.vertical(|ui| {
+                            ui.label("Camera Four");
+                            ui.label("[add camera stream]");
+                            ui.horizontal(|ui| {
+                                ui.button("HD");
+                                ui.button("◑");
+                                ui.button("🔍");
+                                ui.button("⏸");
+                                ui.button("🔀");
+                            });
+
+                        });
+                    });
+                });
+            });   
         });
     }
 }
