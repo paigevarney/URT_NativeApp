@@ -49,6 +49,7 @@ impl eframe::App for DashApp {
 
             let comp_timer = &mut self.comp_timer;
             
+            // Timer counts down from 45mins
             if comp_timer.is_running {
                 if let Some(start_time) = comp_timer.start_time {
                     let elapsed = start_time.elapsed();
@@ -86,6 +87,7 @@ impl eframe::App for DashApp {
                             let start = ui.button("Start");
                             let stop = ui.button("Stop");
                             let reset = ui.button("Reset");
+                            let intervene = ui.button("Intervene");
 
                             if comp_timer.is_running {
                             if stop.clicked() {
@@ -103,17 +105,12 @@ impl eframe::App for DashApp {
                                 comp_timer.start_time = None;
                                 comp_timer.is_running = false;
                             }
+                            // IMPLEMENT: intervention timer (refer to old web console)
+                            //     I believe it paused the current countdown timer and started counting from 10 mins
                         });                     
                     });
 
                     ctx.request_repaint();
-                });
-                ui.group(|ui| {
-                    ui.set_width(ui.available_width());
-                    ui.vertical(|ui| {
-                        ui.label("Intervention Timer");
-                        ui.label("TIMER GOES HERE");
-                    });
                 });
             });
             ui.horizontal(|ui| {
@@ -126,6 +123,7 @@ impl eframe::App for DashApp {
                         let plot = Plot::new("Memory Usage");
 
                         // placeholder data
+                        // IMPLEMENT: graphs to recieve live data from UDP sockets to map
                         let graph: Vec<[f64; 2]> = vec![[0.0, 0.0], [1.0, 1.0], [2.0, 4.0], [3.0, 9.0], [4.0, 16.0], [5.0, 25.0]];
 
 
@@ -133,6 +131,7 @@ impl eframe::App for DashApp {
                             plot_ui.line(Line::new(PlotPoints::from(graph)));
                         });
 
+                        // Update label to reflect data as well
                         ui.label("0%");
                     });
                 });
@@ -204,7 +203,117 @@ struct ScienceApp {}
 impl eframe::App for ScienceApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.label("This is the science panel");
+            ui.horizontal(|ui| {
+                ui.group(|ui| {
+                    ui.set_width(ui.available_width()/1.5);
+                    ui.set_height(620.0);
+                    ui.vertical(|ui| {
+                        ui.horizontal(|ui| {
+                        ui.group(|ui| {
+                            ui.set_width(ui.available_width()/3.0);
+                            ui.set_height(200.0);
+                            ui.vertical(|ui| {
+                                ui.label("Scoop Arm");
+                                ui.horizontal(|ui| {
+                                    ui.button("Up");
+                                    ui.button("Down");
+                                });
+                                ui.horizontal(|ui| {
+                                    ui.button("Creep On");
+                                    ui.button("Creep Off");
+                                });
+                                ui.button("Stop");
+                            });
+                        });
+                        ui.group(|ui| {
+                            ui.set_width(ui.available_width()/2.0);
+                            ui.set_height(200.0);
+                            ui.vertical(|ui| {
+                                ui.label("Scoop Rotation");
+                                ui.horizontal(|ui| {
+                                    ui.button("Clockwise");
+                                    ui.button("Counter Clockwise");
+                                });
+                                ui.button("Stop");
+                            });
+                        });
+                        ui.group(|ui| {
+                            ui.set_width(ui.available_width());
+                            ui.set_height(200.0);
+                            ui.vertical(|ui| {
+                                ui.label("Processor");
+                                ui.horizontal(|ui| {
+                                    ui.button("Out");
+                                    ui.button("In");
+                                });
+                                ui.horizontal(|ui| {
+                                    ui.button("Creep On");
+                                    ui.button("Creep Off");
+                                });
+                                ui.button("Stop");
+                            });
+                        });
+                    });
+                    ui.horizontal(|ui| {
+                        ui.group(|ui| {
+                            ui.set_width(ui.available_width()/3.0);
+                            ui.set_height(200.0);
+                            ui.vertical(|ui| {
+                                ui.label("Heating");
+                                ui.horizontal(|ui| {
+                                    ui.button("Pad Up");
+                                    ui.button("Pad Down");
+                                });
+                                ui.horizontal(|ui| {
+                                    ui.button("Heater On");
+                                    ui.button("Heater Off");
+                                });
+                            });
+                        });
+                        ui.group(|ui| {
+                            ui.set_width(ui.available_width()/2.0);
+                            ui.set_height(200.0);
+                            ui.vertical(|ui| {
+                                ui.label("Moisture");
+                                ui.horizontal(|ui| {
+                                    ui.button("Up");
+                                    ui.button("Down");
+                                });
+                            });
+                        });
+                        ui.group(|ui| {
+                            ui.set_width(ui.available_width());
+                            ui.set_height(200.0);
+                            ui.label("Moist Meter");
+                        });
+                    });
+                    ui.group(|ui| {
+                            ui.set_width(ui.available_width()/3.0);
+                            ui.set_height(200.0);
+                            ui.label("Thermistor Temperature");
+                    });
+                });
+            });
+                ui.vertical(|ui| {
+                    ui.group(|ui| {
+                        ui.set_width(ui.available_width());
+                        ui.set_height(300.0);
+                        ui.label("[add camera stream]");
+                        ui.horizontal(|ui| {
+                                ui.button("HD");
+                                ui.button("◑");
+                                ui.button("🔍");
+                                ui.button("⏸");
+                                ui.button("🔀");
+                            });
+                    });
+                    ui.group(|ui| {
+                        ui.set_width(ui.available_width());
+                        ui.set_height(300.0);
+                        ui.label("[add digital twin]");
+                    });
+                });
+            });
         });
     }
 }
@@ -215,14 +324,88 @@ struct ArmApp {}
 impl eframe::App for ArmApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.label("This is the arm panel");
+            ui.horizontal(|ui| {
+                ui.group(|ui| {
+                    ui.set_width(ui.available_width()/1.5);
+                    ui.set_height(620.0);
+                    ui.label("[add stuff here]");
+                });
+                ui.vertical(|ui| {
+                    ui.group(|ui| {
+                        ui.set_width(ui.available_width());
+                        ui.set_height(300.0);
+                        ui.label("[add camera stream]");
+                        ui.horizontal(|ui| {
+                                ui.button("HD");
+                                ui.button("◑");
+                                ui.button("🔍");
+                                ui.button("⏸");
+                                ui.button("🔀");
+                            });
+                    });
+                    ui.group(|ui| {
+                        ui.set_width(ui.available_width());
+                        ui.set_height(300.0);
+                        ui.label("[add digital twin]");
+                    });
+                });
+            });
+        });
+    }
+}
+
+#[derive(Default)]
+struct ElectricalApp {}
+
+impl eframe::App for ElectricalApp {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        egui::CentralPanel::default().show(ctx, |ui| {
+            ui.label("This is the electrical panel");
 
         });
     }
 }
 
 #[derive(Default)]
-struct CamApp {}
+struct ChassisApp {}
+
+impl eframe::App for ChassisApp {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        egui::CentralPanel::default().show(ctx, |ui| {
+            ui.label("This is the chassis panel");
+
+        });
+    }
+}
+// IMPLEMENT: ability to dynamically add and remove camera streams and choose which to view from dropdown (selectable_value)
+#[derive(Debug, PartialEq)]
+enum Cameras { 
+    CameraOne, 
+    CameraTwo, 
+    CameraThree, 
+    CameraFour,
+    CameraFive,
+}
+
+#[derive(Default)]
+struct CamApp {
+    selected: Cameras,
+}
+
+impl Default for Cameras { 
+    fn default() -> Self {
+        Cameras::CameraOne
+    }
+}
+
+impl CamApp {
+    pub fn new() -> Self {
+        Self {
+            selected: Cameras::CameraOne,
+        }
+    }
+}
+
 
 impl eframe::App for CamApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
@@ -233,18 +416,24 @@ impl eframe::App for CamApp {
                         ui.set_width(ui.available_width() / 2.0);
                         ui.set_height(300.0);
                         ui.vertical(|ui| {
-                            ui.label("Camera One");
+                            egui::ComboBox::from_label("")
+                                .selected_text(format!("{:?}", self.selected))
+                                .show_ui(ui, |ui| {
+                                    ui.selectable_value(&mut self.selected, Cameras::CameraOne, "Camera One");
+                                    ui.selectable_value(&mut self.selected, Cameras::CameraTwo, "Camera Two");
+                                    ui.selectable_value(&mut self.selected, Cameras::CameraThree, "Camera Three");
+                                    ui.selectable_value(&mut self.selected, Cameras::CameraFour, "Camera Four");
+                                });
                             ui.label("[add camera stream]");
                             ui.horizontal(|ui| {
                                 ui.button("HD");
                                 ui.button("◑");
                                 ui.button("🔍");
                                 ui.button("⏸");
-                                ui.button("🔀");
                             });
                         });
-                    });
-                    ui.group(|ui| {
+                     });
+                     ui.group(|ui| {
                         ui.set_width(ui.available_width());
                         ui.set_height(300.0);
                         ui.vertical(|ui| {
@@ -255,7 +444,7 @@ impl eframe::App for CamApp {
                                 ui.button("◑");
                                 ui.button("🔍");
                                 ui.button("⏸");
-                                ui.button("🔀");
+                                    
                             });
 
                         });
@@ -273,8 +462,7 @@ impl eframe::App for CamApp {
                                 ui.button("◑");
                                 ui.button("🔍");
                                 ui.button("⏸");
-                                ui.button("🔀");
-                            });
+                             });
                         });
                     });
                     ui.group(|ui| {
@@ -287,15 +475,13 @@ impl eframe::App for CamApp {
                                 ui.button("HD");
                                 ui.button("◑");
                                 ui.button("🔍");
-                                ui.button("⏸");
-                                ui.button("🔀");
-                            });
-
+                                ui.button("⏸");         
+                            });      
                         });
                     });
                 });
-            });   
-        });
+            });
+        });         
     }
 }
 
@@ -305,14 +491,19 @@ struct WrapApp {
     dash_app: DashApp, 
     science_app: ScienceApp,
     arm_app: ArmApp,
+    electrical_app: ElectricalApp,
+    chassis_app: ChassisApp,
     cam_app: CamApp,
     selected_app: SelectedApp,
 }
 
+#[derive(PartialEq)]
 enum SelectedApp {
     Dashboard, 
     Science, 
     Arm, 
+    Electrical, 
+    Chassis,
     Cameras,
 }
 
@@ -328,6 +519,7 @@ impl WrapApp {
     }
 }
 
+// WrapApp contains functionality to display the chosen page from the menu bar at the top of the screen
 impl eframe::App for WrapApp {
    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
@@ -335,16 +527,22 @@ impl eframe::App for WrapApp {
                ui.heading("URT Native App");
                ui.with_layout(egui::Layout::right_to_left(egui::Align::RIGHT), |ui| {
                    ui.horizontal(|ui| {
-                       if ui.button("Cameras").clicked() {
+                       if ui.add(egui::SelectableLabel::new(self.selected_app == SelectedApp::Cameras, "Cameras")).clicked() {
                            self.selected_app = SelectedApp::Cameras;
                        }
-                       if ui.button("Arm").clicked() {
+                       if ui.add(egui::SelectableLabel::new(self.selected_app == SelectedApp::Chassis, "Chassis")).clicked() {
+                           self.selected_app = SelectedApp::Chassis;
+                       }
+                       if ui.add(egui::SelectableLabel::new(self.selected_app == SelectedApp::Electrical, "Electrical")).clicked() {
+                           self.selected_app = SelectedApp::Electrical;
+                       }
+                       if ui.add(egui::SelectableLabel::new(self.selected_app == SelectedApp::Arm, "Arm")).clicked() {
                            self.selected_app = SelectedApp::Arm;
                        }
-                       if ui.button("Science").clicked() {
+                       if ui.add(egui::SelectableLabel::new(self.selected_app == SelectedApp::Science, "Science")).clicked() {
                            self.selected_app = SelectedApp::Science;
                        }
-                       if ui.button("Dashboard").clicked() {
+                       if ui.add(egui::SelectableLabel::new(self.selected_app == SelectedApp::Dashboard, "Dashboard")).clicked() {
                            self.selected_app = SelectedApp::Dashboard;
                        }
                    });
@@ -356,6 +554,8 @@ impl eframe::App for WrapApp {
            SelectedApp::Dashboard => self.dash_app.update(ctx, frame), 
            SelectedApp::Science => self.science_app.update(ctx, frame),
            SelectedApp::Arm => self.arm_app.update(ctx, frame), 
+           SelectedApp::Electrical => self.electrical_app.update(ctx, frame),
+           SelectedApp::Chassis => self.chassis_app.update(ctx, frame),
            SelectedApp::Cameras => self.cam_app.update(ctx, frame),
 
        }
